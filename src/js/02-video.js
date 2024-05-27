@@ -16,3 +16,16 @@
 // if (getTimeVideo || 0) {
 //   player.setCurrentTime(getTimeVideo);
 // }
+import Player from '@vimeo/player';
+
+const iframe = document.getElementById('iframe');
+console.dir(playerEl);
+const playerEl = new Player('iframe', {
+  id: 333444555,
+  width: 1640,
+});
+
+playerEl.on('play', function (e) {
+  e.preventDefault();
+  console.log('playedthe video!');
+});
