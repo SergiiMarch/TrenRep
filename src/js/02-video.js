@@ -17,15 +17,28 @@
 //   player.setCurrentTime(getTimeVideo);
 // }
 import Player from '@vimeo/player';
+import throttle from 'lodash.throttle';
 
-const iframe = document.getElementById('iframe');
-console.dir(playerEl);
-const playerEl = new Player('iframe', {
-  id: 333444555,
-  width: 1640,
-});
+// Отримуємо iframe елемент
+const iframe = document.getElementById('vimeo-player');
+// Ініціалізуємо Vimeo плеєр
+const player = new Player(iframe);
 
-playerEl.on('play', function (e) {
-  e.preventDefault();
-  console.log('playedthe video!');
-});
+// Ключ для збереження часу відтворення у localStorage
+const LOCAL_STORAGE_KEY = 'videoplayer-current-time';
+
+// Функція для збереження часу відтворення у localStorage
+const saveCurrentTime = throttle(data => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, data.seconds);
+}, 1000);
+
+// Підписуємося на подію timeupdate для збереження часу відтворення
+player.on('timeupdate', saveCurrentTime);
+
+// Встановлюємо поточний час відтворення зі збереженого значення у localStorage
+const savedTime = localStorage.getItem(LOCAL_STORAGE_KEY);
+if (savedTime !== null) {
+  player.setCurrentTime(parseFloat(savedTime)).catch(error => {
+    console.error('Failed to set the current time:', error);
+  });
+}
