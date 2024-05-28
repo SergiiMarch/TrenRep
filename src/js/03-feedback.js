@@ -40,3 +40,20 @@
 //     form.elements.message.value = savedMessage.message;
 //   }
 // }
+import throttle from 'lodash.throttle';
+
+const formEl = document.querySelector('.feedback-form');
+
+const LOCAL_STORAGE_KEY = 'feedback-form-state';
+
+formEl.addEventListener('input', throttle(handlerClick, 1000));
+
+function handlerClick(e) {
+  e.preventDefault();
+  const formData = {
+    email: formEl.elements.email.value,
+    message: formEl.elements.message.value,
+  };
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formData));
+  console.log(formData);
+}
